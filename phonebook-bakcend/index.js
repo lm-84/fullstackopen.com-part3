@@ -66,7 +66,7 @@ app.all("/info", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  if (!body.name) {
+  if (!body.name || !body.number) {
     return response.status(400).json({
       error: "content missing",
     });
@@ -77,6 +77,12 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
     id: generateId(1000),
   };
+
+  if (persons.find((p) => p.name === person.name)) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
 
   persons = persons.concat(person);
 
