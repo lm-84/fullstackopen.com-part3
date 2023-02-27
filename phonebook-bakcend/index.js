@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     name: "Arto Hellas",
@@ -61,6 +63,30 @@ app.all("/info", (request, response) => {
     } people</p><p>${new Date()}</p></div>`
   );
 });
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+  if (!body.name) {
+    return response.status(400).json({
+      error: "content missing",
+    });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(1000),
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
+  return;
+});
+
+const generateId = (max) => {
+  return Math.floor(Math.random() * max);
+};
 
 const PORT = 3001;
 app.listen(PORT, () => {
