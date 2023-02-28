@@ -38,7 +38,21 @@ let persons = [
 
 var morgan = require("morgan");
 
-app.use(morgan("tiny"));
+morgan.token("data", function (req, res) {
+  return JSON.stringify({
+    name: req.body.name,
+    number: req.body.number,
+  });
+});
+
+var logger = morgan("tiny");
+
+app.use(function (req, res, next) {
+  if (req.method === "POST") {
+    return next();
+  }
+  logger(req, res, next);
+});
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
@@ -67,6 +81,8 @@ app.all("/info", (request, response) => {
     } people</p><p>${new Date()}</p></div>`
   );
 });
+
+app.use(logger, morgan(":data"));
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
