@@ -73,19 +73,18 @@ app.post("/api/persons", (request, response) => {
   const person = {
     name: body.name,
     number: body.number,
-    id: generateId(1000),
   };
 
-  if (persons.find((p) => p.name === person.name)) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  }
+  // if (persons.find((p) => p.name === person.name)) {
+  //   return response.status(400).json({
+  //     error: "name must be unique",
+  //   });
+  // }
 
-  persons = persons.concat(person);
-
-  response.json(person);
-  return;
+  Person.create(person).then((person) => {
+    response.json(person);
+    return;
+  });
 });
 
 const generateId = (max) => {
