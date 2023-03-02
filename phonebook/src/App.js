@@ -112,11 +112,11 @@ const App = () => {
         .erase(personToDelete.id)
         .then((response) => {
           setPersons(
-            personsAux.filter((person) => person.name !== personToDelete.name)
+            personsAux.filter((person) => person.id !== personToDelete.id)
           );
           setFilteredPersons(
             FilteredPersonsAux.filter(
-              (person) => person.name !== personToDelete.name
+              (person) => person.id !== personToDelete.id
             )
           );
           setConfirmMessage("Deleted " + personToDelete.name);
