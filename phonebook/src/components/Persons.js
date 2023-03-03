@@ -4,7 +4,7 @@ import Person from "./Person";
 const Persons = (props) => {
   return props.persons.map((person) => (
     <Person
-      key={person.name}
+      key={person.id}
       name={person.name}
       number={person.number}
       handleDelete={() => props.handleDelete(person)}

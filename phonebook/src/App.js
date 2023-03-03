@@ -127,11 +127,11 @@ const App = () => {
             `Information of ${personToDelete.name} has already been removed from server`
           );
           setPersons(
-            personsAux.filter((person) => person.name !== personToDelete.name)
+            personsAux.filter((person) => person.id !== personToDelete.id)
           );
           setFilteredPersons(
             FilteredPersonsAux.filter(
-              (person) => person.name !== personToDelete.name
+              (person) => person.id !== personToDelete.id
             )
           );
           setTimeout(() => setErrorMessage(""), 5000);
