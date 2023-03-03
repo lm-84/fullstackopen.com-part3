@@ -34,7 +34,7 @@ morgan.token("data", function (req, res) {
 var logger = morgan("tiny");
 
 app.use(function (req, res, next) {
-  if (req.method === "POST") {
+  if (req.method === "POST" || req.method === "PUT") {
     return next();
   }
   logger(req, res, next);
@@ -79,7 +79,7 @@ app.use(logger, morgan(":data"));
 app.post("/api/persons", (request, response) => {
   const body = request.body;
   if (!body.name || !body.number) {
-    return response.status(400).json({
+    response.status(400).json({
       error: "content missing",
     });
   }
@@ -89,16 +89,30 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  // if (persons.find((p) => p.name === person.name)) {
-  //   return response.status(400).json({
-  //     error: "name must be unique",
-  //   });
-  // }
-
   person
     .save()
     .then((savedPerson) => {
       response.json(savedPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+  if (!body.number) {
+    response.status(400).json({
+      error: "content missing",
+    });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
     })
     .catch((error) => next(error));
 });
