@@ -49,9 +49,9 @@ app.get("/api/persons", (request, response) => {
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = Person.find((person) => person.id === id)
-    .then(response.json(person))
+  const id = request.params.id;
+  Person.findById(id)
+    .then((person) => response.json(person))
     .catch((error) => next(error));
 });
 
