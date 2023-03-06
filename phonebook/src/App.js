@@ -53,21 +53,24 @@ const App = () => {
             personObject
           )
           .then((response) => {
-            setPersons(
-              persons.map((person) =>
-                person.name !== newName ? person : response
-              )
+            const personsAux = persons.map((person) =>
+              person.name !== newName ? person : response
             );
-            setFilteredPersons(
-              filteredPersons.map((person) =>
-                person.name !== newName ? person : response
-              )
-            );
+            setPersons(personsAux);
+            setFilteredPersons(personsAux);
+            setNewName("");
+            setNewNumber("");
             setConfirmMessage("Updated " + newName);
             setTimeout(() => setConfirmMessage(""), 5000);
           })
           .catch((error) => {
-            alert("an error has occurred updating the person");
+            console.log("error in update");
+            if (error.message.includes("422")) {
+              setErrorMessage(error.response.data.message);
+              setTimeout(() => setErrorMessage(""), 5000);
+            } else {
+              alert("an error has occurred updating the person");
+            }
           });
       }
     } else {
@@ -83,7 +86,14 @@ const App = () => {
           setTimeout(() => setConfirmMessage(""), 5000);
         })
         .catch((error) => {
-          alert("an error has occurred saving the new person");
+          console.log("error in create", error);
+          console.log(error.response.data.mess);
+          if (error.message.includes("422")) {
+            setErrorMessage(error.response.data.message);
+            setTimeout(() => setErrorMessage(""), 5000);
+          } else {
+            alert("an error has occurred saving the new person");
+          }
         });
     }
   };
