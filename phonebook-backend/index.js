@@ -109,7 +109,7 @@ app.put("/api/persons/:id", (request, response, next) => {
   };
 
   Person.findByIdAndUpdate(request.params.id, person, {
-    runValidators: true,
+    runValidators: true,motherboard,
     context: "query",
     new: true,
   })
